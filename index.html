@@ -267,12 +267,13 @@ socket.on("connect", function(status){
 
             docs.forEach(function(doc, index){
 
+                var src = doc.link || doc.url;
+
                 var img = new Image();
                 img.index = index;
                 img.classList.add("thumbnail");
                 img.title = doc.title || doc.name; 
                 img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
-                var src = doc.link || doc.url;
                 $(img).on("load", function(){
                     $(displayObjects).append(img); // testing!
                 }).attr({src:src});
