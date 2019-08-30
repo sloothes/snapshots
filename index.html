@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" contents="">
+
+    <title>Snapshots gallery (v1.1)</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootbox-dialoges.css">
+    <link rel="stylesheet" href="/css/meter.css">
+    <link rel="stylesheet" href="/css/spinner.css">
+    <link rel="stylesheet" href="/css/alerts.css">
+    <link rel="stylesheet" href="/css/anywhere3d.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/photoswipe/dist/photoswipe.css">
+    <link rel="stylesheet" href="/photoswipe/dist/default-skin/default-skin.css">
+
+    <script>debugMode = true;</script>
+
+    <script src="/js/loadjs.min.js"></script>
+    <script src="/socketcluster.js"></script>
+    <script src="/sc-codec-min-bin.js"></script>
+    <script src="/photoswipe/dist/photoswipe.js"></script>
+    <script src="/photoswipe/dist/photoswipe-ui-default.js"></script>
+
+</head>
+
+<body style="background:#000000;overflow:auto;">
+
+<section class="mbr-section" id="gallery-section">
+
+<div id="gallery-catalog-panel" class="tab-content" style="width:100%;">
+
+    <div id="gallery-items-panel" class="well" style="width:100%;margin:0;background:none;">
+
+        <h4 style="color:#fff;"><a href="/home" target="_blank" style="color:#ffffff;">sloothes/</a>snapshots:
+            <div id="counter-right-top" class="pull-right small items-counter" style="margin-top:4px;color:#ddd;">
+                <span class="from">zero</span>
+                to <span class="upto">zero</span>
+                of <span class="count">none</span>
+            </div>
+        </h4>
+
+        <div id="gallery-catalog-pager" class="pager">
+            <div style="margin:10px auto 10px auto;height:35px;max-width:350px;">
+                <li class="btn btn-primary get-prev-btn pull-left">&#9668;</li>
+                <div class="pager-buttons-holder" style="display:inline;">
+                    <a class="btn btn-default page-btn">1</a>
+                    <a class="btn btn-default page-btn">2</a>
+                    <a class="btn btn-default page-btn">3</a>
+                    <a class="btn btn-default page-btn">4</a>
+                </div>
+                <li class="btn btn-primary get-next-btn pull-right">&#9658;</li>
+            </div>
+
+            <div id="gallery-display" class="well"></div>
+
+            <div style="margin:10px auto 10px auto;height:35px;max-width:350px;">
+                <li class="btn btn-primary btn-white-outline first-page-btn pull-left" style="margin-right:5px;">First</li>
+                <li class="btn btn-primary btn-white-outline get-prev-group-btn pull-left">&#9668;&#9668;</li>
+                <div id="counter" class="small items-counter" style="width:fit-content;display:inline;height:35px;margin-top:4px;color:#ddd;">
+                    <span class="from">zero</span> to <span class="upto">zero</span> of <span class="count">none</span>
+                </div>
+                <li class="btn btn-primary btn-white-outline last-page-btn pull-right" style="margin-left:5px;">Last</li>
+                <li class="btn btn-primary btn-white-outline get-next-group-btn pull-right">&#9658;&#9658;</li>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- PHOTOSWIPE -->
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<script src="/js/rawinflate.js"></script>
+<script src="/js/rawdeflate.js"></script>
+<script src="/js/store2.js"></script>
+<script src="/js/Objectid.js"></script>
+<script src="/js/zangodb.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script src="/js/bootbox.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/DeviceDetector.js"></script>
+<script src="/js/MathDecimalAdjustment.js"></script>
+<script src="/js/watermark.js"></script>
+<script src="/js/validator.js"></script>
+<script src="/js/system.min.js"></script>
+<script src="/js/signals.min.js"></script>
+<script src="/js/validator.min.js"></script>
+<script src="/js/alerts.js"></script>
+
+<script>
+
+//  Socketcluster.
+
+    var socket = socketCluster.create({
+        hostname: "anywhere3d.com",
+        codecEngine: scCodecMinBin,
+    });
+
+    socket.on("connect", function(status){
+        debugMode && console.log({"status": status});
+    });
+
+    socket.on("error", function (err) {
+        console.error( err.stack );
+    });
+
+    socket.on("authStateChange", function( state ){
+        debugMode && console.log({"authStateChange": state});
+    });
+
+    socket.on("subscribe", function( name, object ){
+        debugMode && console.log(`subscribed successfully to "${name}" channel:`, object);
+    });
+
+</script>
+
+<script>
+
+socket.on("connect", function(status){
+
+//  Pager.
+
+    const pager  = document.getElementById("gallery-catalog-pager");
+    const displayObjects = document.getElementById("gallery-display");
+    const catalogItemsPanel = document.getElementById("gallery-items-panel");
+    const galleryCatalogPanel = document.getElementById("gallery-catalog-panel");
+    const galleryCatalogPager = document.getElementById("gallery-catalog-pager");
+
+    var pagebuttons = $(pager).find(".page-btn");
+    var pageslength = $(pager).find(".page-btn").length;
+
+    const firstPageBtn = $(pager).find(".first-page-btn").get(0);
+    const lastPageBtn  = $(pager).find(".last-page-btn").get(0);
+    const prevPageBtn  = $(pager).find(".get-prev-btn").get(0);
+    const nextPageBtn  = $(pager).find(".get-next-btn").get(0);
+    const prevGroupBtn = $(pager).find(".get-prev-group-btn").get(0);
+    const nextGroupBtn = $(pager).find(".get-next-group-btn").get(0);
+
+    const pageSelector = "#gallery-catalog-pager .page-btn";
+
+    const counter = $(catalogItemsPanel).find("#counter").get(0);
+    const counterRT = $(catalogItemsPanel).find("#counter-right-top").get(0);
+
+    var timeout;
+    var interval;
+    var selectors;
+    var delay = 200;
+
+    var limit = 24;
+
+    var max = 0;
+    var skip = 0;
+    var lastpage = 0;
+    var currentpage = 0;
+    var currentindex = 0;
+
+//  Signals.
+    var Signal = signals.Signal;
+
+    function count(){
+        return new Promise(function(resolve, reject){
+            socket.emit("mongo count", {
+                selectors: {},
+                collection: "snapshots",
+                options: { skip:0 }
+            }, function(err, num){
+                resolve(num);
+            });
+        }).then(function(k){
+            max = k; debugMode && console.log("max:", max);
+        }).then(function(){
+            $(catalogItemsPanel).find(".count").text(max);
+        }).catch(function(err){
+            console.error(err);
+        });
+    }
+
+    function reset(){
+
+        max = 0;
+        skip = 0;
+        lastpage = 0;
+        currentpage = 0;
+        currentindex = 0;
+
+    }
+
+    function init(){
+
+    //  Page buttons numbering.
+        pagebuttons.each(function(i){
+            pagebuttons[i].skip = limit * i;
+            $(pagebuttons[i]).text( i + 1 );
+        });
+
+    //  Current button setup.
+        pagebuttons.removeClass("btn-primary");
+        var currentButton = pagebuttons.get(0);
+        $(currentButton).addClass("btn-primary");
+
+    //  Clear listed objects.
+        $(displayObjects).children().remove();
+
+    }
+
+    function get_items(){
+
+        socket.emit("mongo find", {
+            selectors: {},
+            collection: "snapshots",
+            options: { skip:skip, limit:limit }
+        }, function(err, docs){
+            debugMode && console.log("docs:", docs);
+
+            if ( !docs.length ) return;
+
+            $(displayObjects).children().remove();
+
+            docs.forEach(function(doc, index){
+
+                var img = new Image();
+                img.classList.add("thumbnail");
+                img.title = doc.name; img.index = index;
+                img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
+            //  img.src = doc.link;
+                $(img).on("load", function(){
+                    $(displayObjects).append(img); // testing!
+                }).attr({src:doc.url});
+
+                $(img).on("click", function(){
+
+                    var pswp = $(".pswp").get(0);
+                    var psui = PhotoSwipeUI_Default;
+
+                    var items = []; // build items array.
+
+                    docs.forEach(function(data, index){
+                        items.push({
+                            w:data.width,
+                            h:data.height,
+                            src:data.url,
+                        });
+                    });
+
+                    var options = {
+                        index: img.index, // start at selected index slide.
+                    //  read for options: https://photoswipe.com/documentation/options.html
+                    };
+
+                    var gallery = new PhotoSwipe( pswp, psui, items, options );
+
+                    gallery.init();
+
+                //  currentIndex = gallery.itemHolders[1].index;
+                    debugMode && console.log({"gallery": gallery});
+
+                });
+
+            //  $(displayObjects).append(img);
+
+            });
+
+        });
+
+    }
+
+    function pagerClicked(){
+
+    //  Get last page.
+        lastpage = parseInt( max / limit );
+
+    //  Get current page.
+        currentpage = parseInt( skip / limit );
+
+    //  Get current index.
+        currentindex = parseInt( currentpage % pageslength );
+
+    //  Page buttons numbering.
+        var num = parseInt( currentpage / pageslength ) * pageslength;
+
+        pagebuttons.each(function(i){
+            var page = num + i;
+            pagebuttons[i].skip = limit * page; // important!
+            $(pagebuttons[i]).text( page + 1 ); // important!
+        });
+
+    //  Current button setup.
+        pagebuttons.removeClass("btn-primary");
+        var currentButton = pagebuttons.get( currentindex );
+        $(currentButton).addClass("btn-primary");
+
+    //  Display info.
+
+        if ( max == 0 )
+            $(catalogItemsPanel).find(".from").text("-"); 
+        else if ( skip == max )
+            $(catalogItemsPanel).find(".from").text(skip);
+        else
+            $(catalogItemsPanel).find(".from").text(skip + 1);
+
+        if ( max == 0 )
+            $(catalogItemsPanel).find(".upto").text("-");
+        else if ( skip + limit > max )
+            $(catalogItemsPanel).find(".upto").text( max );
+        else
+            $(catalogItemsPanel).find(".upto").text(skip + limit);
+
+        $(catalogItemsPanel).find(".count").text(max);
+
+        debugMode && console.log({"max":max, "skip":skip, "index": currentindex});
+
+        if ( max && skip < max ) {
+
+            clearTimeout(interval);
+            interval = setTimeout( get_items, delay );
+
+        }
+
+    }
+
+//  Pager.
+
+//  For performance we count items only when we ask last page 
+//  or we change droplist selectors. Not need to count on backward.
+
+//  Page button.
+
+    $(pageSelector).on("click", function(){
+
+        if ( max && this.skip < max ) {
+            skip = this.skip;
+            pagerClicked();
+        }
+
+    });
+
+//  First page.
+
+    $(firstPageBtn).on("click", function(){
+
+        skip = 0;
+        pagerClicked();
+
+    });
+
+//  Last page.
+
+    $(lastPageBtn).on("click", function(){
+
+        if ( max && max > 0 ) {
+
+            var lastpage = parseInt(max / limit);
+
+            if ( limit * lastpage < max ) {
+
+                skip = limit * lastpage;          //  limit * parseInt(max / limit);
+
+            } else {
+
+                skip = limit * ( lastpage - 1 );  //  limit * ( parseInt(max / limit) - 1 );
+
+            }
+
+        } else {
+
+            skip = 0;
+
+        }
+
+        pagerClicked();
+
+    //  Update count. (optional)
+
+        count();
+
+    });
+
+//  Prev page.
+
+    $(prevPageBtn).on("click", function(){
+
+        if ( skip - limit < 0 ) {
+
+            skip = 0;
+
+        } else {
+
+            skip -= limit;
+        }
+
+        pagerClicked();
+
+    });
+
+//  Next page.
+
+    $(nextPageBtn).on("click", function(){
+
+        var lastpage = parseInt(max / limit);
+
+        if ( skip + limit < max )
+
+            skip += limit;
+
+        else if ( skip + limit > max )
+            
+            skip = limit * lastpage;
+
+    //  else if ( skip + limit == max ) skip;
+
+        pagerClicked();
+
+    });
+
+//  Prev group.
+
+    $(prevGroupBtn).on("click", function(){
+
+        var offset = pageslength * limit;
+
+        if ( skip - offset < 0 ) {
+
+            skip = 0;
+
+        } else {
+
+            skip -= offset;
+        }
+
+        pagerClicked();
+
+    });
+
+//  Next group.
+
+    $(nextGroupBtn).on("click", function(){
+
+        var offset = pageslength * limit;
+
+        if ( max > 0 ) {
+
+            var lastpage = parseInt(max / limit);
+
+            if ( skip + offset < max ) {
+
+                skip += offset;
+
+            } else if ( skip + offset > max ) {
+
+                if ( limit * lastpage < max ) {
+
+                    skip = limit * lastpage;
+
+                } else {
+
+                    skip = limit * ( lastpage - 1 );
+                }
+
+            } else if ( skip + offset == max ) {
+
+                skip = limit * ( lastpage - 1 );
+
+            }
+
+        } else {
+
+            skip = 0;
+
+        }
+
+        pagerClicked();
+
+    });
+
+    count().then(function(){
+        init();
+        get_items();
+    });
+
+});
+
+</script>
+
+</body>
+</html>
