@@ -268,13 +268,14 @@ socket.on("connect", function(status){
             docs.forEach(function(doc, index){
 
                 var img = new Image();
+                img.index = index;
                 img.classList.add("thumbnail");
-                img.title = doc.name; img.index = index;
+                img.title = doc.title || doc.name; 
                 img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
             //  img.src = doc.link;
                 $(img).on("load", function(){
                     $(displayObjects).append(img); // testing!
-                }).attr({src:doc.url});
+                }).attr({src:doc.link || doc.url});
 
                 $(img).on("click", function(){
 
@@ -287,7 +288,7 @@ socket.on("connect", function(status){
                         items.push({
                             w:data.width,
                             h:data.height,
-                            src:data.url,
+                            src:data.link || data.url,
                         });
                     });
 
