@@ -286,10 +286,11 @@ socket.on("connect", function(status){
                     var items = []; // build items array.
 
                     docs.forEach(function(data, index){
+                        var url = data.link || data.url;
                         items.push({
+                            src: url,
                             w:data.width,
                             h:data.height,
-                            src:src,
                         });
                     });
 
