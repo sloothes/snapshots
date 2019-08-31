@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="description" contents="">
 
-    <title>Snapshots gallery (v1.0)</title>
+    <title>Snapshots gallery (v1.1)</title>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootbox-dialoges.css">
@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="/photoswipe/dist/default-skin/default-skin.css">
 
     <script>debugMode = true;</script>
-
     <script src="/js/loadjs.min.js"></script>
     <script src="/socketcluster.js"></script>
     <script src="/sc-codec-min-bin.js"></script>
@@ -115,6 +114,17 @@
         </div>
     </div>
 </div>
+
+<script>
+(function(){
+    $(".pswp__img").on("load", function(){
+        if ( this.src.startsWith("blob:") ) {
+            URL.revokeObjectURL(this.src);
+            debugMode && console.log("revoked:", this.src); 
+        }
+    });
+})();
+</script>
 
 </section>
 
@@ -350,14 +360,6 @@ socket.on("connect", function(status){
                             //  currentIndex = gallery.itemHolders[1].index;
                                 debugMode && console.log({"gallery": gallery});
 
-                            }).then(function(){
-                                var pswpImgSelector = "img.pswp__img";
-                                $(pswpImgSelector).on("load", function(){
-                                    if ( this.src.startsWith("blob:") ) {
-                                        URL.revokeObjectURL(this.src);
-                                        debugMode && console.log("revoked:", this.src); 
-                                    }
-                                });
                             });
 
                         });
