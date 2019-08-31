@@ -348,8 +348,9 @@ socket.on("connect", function(status){
 
                                 var pswpImgSelector = "img.pswp__img";
                                 $(pswpImgSelector).on("load", function(){
-                                    if ( pswpImgSelector.src.startsWith("blob:") ) {
-                                        URL.revokeObjectURL(pswpImgSelector.src);
+                                    if ( this.src.startsWith("blob:") ) {
+                                        URL.revokeObjectURL(this.src);
+                                        debugMode && console.log("revoked:", this.src); 
                                     }
                                 });
 
