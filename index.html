@@ -115,17 +115,6 @@
     </div>
 </div>
 
-<script>
-(function(){
-    $(".pswp__img").on("load", function(){
-        if ( this.src.startsWith("blob:") ) {
-            URL.revokeObjectURL(this.src);
-            debugMode && console.log("revoked:", this.src); 
-        }
-    });
-})();
-</script>
-
 </section>
 
 <script src="/js/rawinflate.js"></script>
@@ -145,6 +134,17 @@
 <script src="/js/signals.min.js"></script>
 <script src="/js/validator.min.js"></script>
 <script src="/js/alerts.js"></script>
+
+<script>
+(function(){
+    $(".pswp__img").on("load", function(){
+        if ( this.src.startsWith("blob:") ) {
+            URL.revokeObjectURL(this.src);
+            debugMode && console.log("revoked:", this.src); 
+        }
+    });
+})();
+</script>
 
 <script>
 
