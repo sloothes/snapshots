@@ -347,11 +347,12 @@ socket.on("connect", function(status){
 
                                 gallery.listen("close", function() { 
                                     gallery.items.forEach(function(item, index){
-                                //  debugMode && console.log( item );
-                                    if ( item.src.startsWith("blob:") ) {
-                                        URL.revokeObjectURL(item.src);
-                                        debugMode && console.log( "revoked:", item.src );
-                                    }
+                                    //  debugMode && console.log( item );
+                                        if ( item.src.startsWith("blob:") ) {
+                                            URL.revokeObjectURL(item.src);
+                                            debugMode && console.log( "revoked:", item.src );
+                                        }
+                                    });
                                 });
 
                                 gallery.init(); // important!
