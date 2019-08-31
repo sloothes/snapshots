@@ -316,12 +316,13 @@ socket.on("connect", function(status){
                                     });
 
                                 }).then(function(blob){
+                                    debugMode && console.log(blob);
 
                                     var options = {};
                                     options.w = data.width;
                                     options.h = data.height;
                                     if (blob) options.src = URL.createObjectURL(blob);
-                                    else options.src = data.link || data.url;
+                                    else options.src = url;
                                     items.push(options);
 
                                 }).catch(function(err){
