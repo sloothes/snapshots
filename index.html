@@ -274,8 +274,9 @@ socket.on("connect", function(status){
                     img.index = index;
                     img.classList.add("thumbnail");
                     img.title = doc.title || doc.name; 
-                    img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
+                    img.style.cssText = "display:none;width:22.8rem;height:auto;";
                     $(img).on("load", function(){
+                        img.style.display = "inline-block"; // important!
                     //  $(displayObjects).append(img); // debugging!
                         if ( img.src.startsWith("blob:") ) {
                             URL.revokeObjectURL(img.src);
