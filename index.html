@@ -286,7 +286,7 @@ socket.on("connect", function(status){
                         img.title = doc.title || doc.name; 
                         img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
                         $(img).on("load", function(){
-                            $(displayObjects).append(img); // testing!
+                        //  $(displayObjects).append(img); // testing!
                             if ( img.src.startsWith("blob:") ) {
                                 URL.revokeObjectURL(img.src);
                             }
@@ -366,7 +366,7 @@ socket.on("connect", function(status){
 
                     });
 
-                //  $(displayObjects).append(img);
+                    $(displayObjects).append(img); // important!
 
                 });
 
