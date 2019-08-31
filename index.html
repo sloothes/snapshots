@@ -349,7 +349,7 @@ socket.on("connect", function(status){
                                     //  index - index of a slide that was loaded.
                                     debugMode && console.log( "imageLoadComplete:", item );
                                     var container = item.container;
-                                    var src = $(container).find("img").get(0).src;
+                                    var src = $(container).find(".pswp__img").get(0).src;
                                     if ( imgSrc.startsWith("blob:") ) {
                                         URL.revokeObjectURL(src);
                                         debugMode && console.log( "revoked:", src );
