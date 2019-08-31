@@ -307,7 +307,7 @@ socket.on("connect", function(status){
 
                                 var url = data.link || data.url;
 
-                                items.push(function(){
+                                items.push((function(){
                                     return cache.match(url).then(function(response){
                                         if (response) return response.blob();
                                         else return cache.add(url).then(function(){
@@ -329,7 +329,7 @@ socket.on("connect", function(status){
                                     }).catch(function(err){
                                         console.error(err);
                                     });
-                                });
+                                })();
 
                             });
 
