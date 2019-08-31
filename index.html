@@ -274,7 +274,7 @@ socket.on("connect", function(status){
                     cache.match(src).then(function(response){
                         if (response) return response.blob();
                         else return cache.add(src).then(function(){
-                            return cach.match(src).then(function(response){
+                            return cache.match(src).then(function(response){
                                 return response.blob();
                             });
                         });
