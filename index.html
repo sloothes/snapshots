@@ -265,51 +265,85 @@ socket.on("connect", function(status){
 
             $(displayObjects).children().remove();
 
-            docs.forEach(function(doc, index){
+            caches.open("snapshots").then(function(cache){
 
-                var src = doc.link || doc.url;
+                docs.forEach(function(doc, index){
 
-                var img = new Image();
-                img.index = index;
-                img.classList.add("thumbnail");
-                img.title = doc.title || doc.name; 
-                img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
-                $(img).on("load", function(){
-                    $(displayObjects).append(img); // testing!
-                }).attr({src:src});
+                    var src = doc.link || doc.url;
 
-                $(img).on("click", function(){
-
-                    var pswp = $(".pswp").get(0);
-                    var psui = PhotoSwipeUI_Default;
-
-                    var items = []; // build items array.
-
-                    docs.forEach(function(data, index){
-                        var url = data.link || data.url;
-                        items.push({
-                            src: url,
-                            w:data.width,
-                            h:data.height,
+                    cache.match(src).then(function(response){
+                        if (response) return response.blob();
+                        else return cache.add(src).then(function(){
+                            return cach.match(src).then(function(response){
+                                return response.blob();
+                            });
                         });
+
+                    }).then(function(blob){
+
+                        var img = new Image();
+                        img.index = index;
+                        img.classList.add("thumbnail");
+                        img.title = doc.title || doc.name; 
+                        img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
+                        $(img).on("load", function(){
+                            $(displayObjects).append(img); // testing!
+                            if (img.src.startsWith("blob:")
+                                URL.revokeObjectURL(img.src);
+                        });
+
+                        if (blob) img.src = URL.createObjectURL(blob);
+                        else img.src = src; // `https://i.imgur.com/${doc.id}.jpg`;
+
+                        $(img).on("click", function(){
+
+                            var pswp = $(".pswp").get(0);
+                            var psui = PhotoSwipeUI_Default;
+
+                            var items = []; // build items array.
+
+                            docs.forEach(function(data, index){
+                                var url;
+                                if (blob) 
+                                    url = URL.createObjectURL(blob);
+                                else 
+                                    url = data.link || data.url;
+                                items.push({
+                                    src: url,
+                                    w:data.width,
+                                    h:data.height,
+                                });
+                            });
+
+                            var options = {
+                                index: img.index, // start at selected index slide.
+                            //  read for options: https://photoswipe.com/documentation/options.html
+                            };
+
+                            var gallery = new PhotoSwipe( pswp, psui, items, options );
+
+                            gallery.init();
+
+                            var pswpImgSelector = "img.pswp__img";
+                            $(pswpImgSelector).on("load", function(){
+                                if (pswpImgSelector.src.startsWith("blob:")
+                                    URL.revokeObjectURL(pswpImgSelector.src);
+                            });
+
+                        //  currentIndex = gallery.itemHolders[1].index;
+                            debugMode && console.log({"gallery": gallery});
+
+                        });
+
                     });
 
-                    var options = {
-                        index: img.index, // start at selected index slide.
-                    //  read for options: https://photoswipe.com/documentation/options.html
-                    };
-
-                    var gallery = new PhotoSwipe( pswp, psui, items, options );
-
-                    gallery.init();
-
-                //  currentIndex = gallery.itemHolders[1].index;
-                    debugMode && console.log({"gallery": gallery});
+                //  $(displayObjects).append(img);
 
                 });
 
-            //  $(displayObjects).append(img);
 
+            }).catch(function(err){
+                console.error(err);
             });
 
         });
