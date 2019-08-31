@@ -345,9 +345,14 @@ socket.on("connect", function(status){
                                 var gallery = new PhotoSwipe( pswp, psui, items, options );
 
                                 gallery.listen("imageLoadComplete", function(index, item) { 
-                                    debugMode && console.log( "imageLoadComplete:", item );
                                     //  item - slide object
                                     //  index - index of a slide that was loaded.
+                                    debugMode && console.log( "imageLoadComplete:", item );
+                                    var src = $(item).find("img").get(0).src;
+                                    if ( imgSrc.startsWith("blob:") ) {
+                                        URL.revokeObjectURL(src);
+                                        debugMode && console.log( "revoked:", src );
+                                    }
                                 });
 
                                 gallery.init();
