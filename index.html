@@ -136,17 +136,6 @@
 <script src="/js/alerts.js"></script>
 
 <script>
-(function(){
-    $(".pswp__img").on("load", function(){
-        if ( this.src.startsWith("blob:") ) {
-            URL.revokeObjectURL(this.src);
-            debugMode && console.log("revoked:", this.src); 
-        }
-    });
-})();
-</script>
-
-<script>
 
 //  Socketcluster.
 
@@ -355,7 +344,14 @@ socket.on("connect", function(status){
 
                                 var gallery = new PhotoSwipe( pswp, psui, items, options );
 
+                                gallery.listen("imageLoadComplete", function(index, item) { 
+                                    debugMode && console.log( "imageLoadComplete:", item );
+                                    //  item - slide object
+                                    //  index - index of a slide that was loaded.
+                                });
+
                                 gallery.init();
+
 
                             //  currentIndex = gallery.itemHolders[1].index;
                                 debugMode && console.log({"gallery": gallery});
