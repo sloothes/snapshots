@@ -345,10 +345,9 @@ socket.on("connect", function(status){
 
                                 var gallery = new PhotoSwipe( pswp, psui, items, options );
 
-                                gallery.listen("imageLoadComplete", function(index, item) { 
-                                //  item - slide object
+                                gallery.listen("close", function() { 
+                                    gallery.items.forEach(function(item, index){
                                 //  debugMode && console.log( item );
-                                //  index - index of a slide that was loaded.
                                     if ( item.src.startsWith("blob:") ) {
                                         URL.revokeObjectURL(item.src);
                                         debugMode && console.log( "revoked:", item.src );
