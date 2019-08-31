@@ -305,15 +305,29 @@ socket.on("connect", function(status){
 
                             docs.forEach(function(data, index){
 
-                                var url;
-                                if (blob) url = URL.createObjectURL(blob);
-                                else url = data.link || data.url;
+                                var url = data.link || data.url;
 
-                                items.push({
-                                    src: url,
-                                    w:data.width,
-                                    h:data.height,
+                                cache.match(url).then(function(response){
+                                    if (response) return response.blob();
+                                    else return cache.add(url).then(function(){
+                                        return cache.match(url).then(function(response){
+                                            return response.blob();
+                                        });
+                                    });
+
+                                }).then(function(blob){
+
+                                    var options = {};
+                                    options.w = data.width;
+                                    options.h = data.height;
+                                    if (blob) options.src = URL.createObjectURL(blob);
+                                    else options.src = data.link || data.url;
+                                    items.push(options);
+
+                                }).catch(function(err){
+                                    console.error(err);
                                 });
+
                             });
 
                             var options = {
