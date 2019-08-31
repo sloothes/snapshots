@@ -288,8 +288,9 @@ socket.on("connect", function(status){
                         img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
                         $(img).on("load", function(){
                             $(displayObjects).append(img); // testing!
-                            if (img.src.startsWith("blob:")
+                            if ( img.src.startsWith("blob:") ) {
                                 URL.revokeObjectURL(img.src);
+                            }
                         });
 
                         if (blob) img.src = URL.createObjectURL(blob);
@@ -303,11 +304,11 @@ socket.on("connect", function(status){
                             var items = []; // build items array.
 
                             docs.forEach(function(data, index){
+
                                 var url;
-                                if (blob) 
-                                    url = URL.createObjectURL(blob);
-                                else 
-                                    url = data.link || data.url;
+                                if (blob) url = URL.createObjectURL(blob);
+                                else url = data.link || data.url;
+
                                 items.push({
                                     src: url,
                                     w:data.width,
@@ -326,8 +327,9 @@ socket.on("connect", function(status){
 
                             var pswpImgSelector = "img.pswp__img";
                             $(pswpImgSelector).on("load", function(){
-                                if (pswpImgSelector.src.startsWith("blob:")
+                                if ( pswpImgSelector.src.startsWith("blob:") ) {
                                     URL.revokeObjectURL(pswpImgSelector.src);
+                                }
                             });
 
                         //  currentIndex = gallery.itemHolders[1].index;
