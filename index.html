@@ -262,13 +262,27 @@ socket.on("connect", function(status){
 
             if ( !docs.length ) return;
 
-            $(displayObjects).children().remove();
-
             caches.open("snapshots").then(function(cache){
+
+                $(displayObjects).children().remove();
 
                 docs.forEach(function(doc, index){
 
                     var src = doc.link || doc.url;
+
+                    var img = new Image();
+                    img.index = index;
+                    img.classList.add("thumbnail");
+                    img.title = doc.title || doc.name; 
+                    img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
+                    $(img).on("load", function(){
+                    //  $(displayObjects).append(img); // debugging!
+                        if ( img.src.startsWith("blob:") ) {
+                            URL.revokeObjectURL(img.src);
+                        }
+                    });
+
+                    $(displayObjects).append(img); // important!
 
                     cache.match(src).then(function(response){
                         if (response) return response.blob();
@@ -280,18 +294,6 @@ socket.on("connect", function(status){
 
                     }).then(function(blob){
 
-                        var img = new Image();
-                        img.index = index;
-                        img.classList.add("thumbnail");
-                        img.title = doc.title || doc.name; 
-                        img.style.cssText = "display:inline-block;width:22.8rem;height:auto;";
-                        $(img).on("load", function(){
-                        //  $(displayObjects).append(img); // testing!
-                            if ( img.src.startsWith("blob:") ) {
-                                URL.revokeObjectURL(img.src);
-                            }
-                        });
-
                         if (blob) img.src = URL.createObjectURL(blob);
                         else img.src = src; // `https://i.imgur.com/${doc.id}.jpg`;
 
@@ -299,6 +301,11 @@ socket.on("connect", function(status){
 
                             var pswp = $(".pswp").get(0);
                             var psui = PhotoSwipeUI_Default;
+
+                            var options = { index: img.index }; // start at selected index slide.
+                        //  read more about options: https://photoswipe.com/documentation/options.html
+
+                        //  Collect items.
 
                             var promises = []; // build items array.
 
@@ -329,17 +336,12 @@ socket.on("connect", function(status){
                                         }).catch(function(err){
                                             console.error(err);
                                         });
-                                    })()
-                                );
+                                    })() // do not use ";"
+                                ); // end of push.
 
-                            });
+                            }); // end of forEach.
 
                         //  debugMode && console.log(promises);
-
-                            var options = {
-                            //  read for options: https://photoswipe.com/documentation/options.html
-                                index: img.index, // start at selected index slide.
-                            };
 
                             Promise.all(promises).then(function(items){
 
@@ -366,10 +368,7 @@ socket.on("connect", function(status){
 
                     });
 
-                    $(displayObjects).append(img); // important!
-
                 });
-
 
             }).catch(function(err){
                 console.error(err);
