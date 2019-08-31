@@ -335,6 +335,7 @@ socket.on("connect", function(status){
 
                             debugMode && console.log(items);
 
+
                             var options = {
                                 index: img.index, // start at selected index slide.
                             //  read for options: https://photoswipe.com/documentation/options.html
@@ -346,6 +347,10 @@ socket.on("connect", function(status){
 
                                 gallery.init();
 
+                            //  currentIndex = gallery.itemHolders[1].index;
+                                debugMode && console.log({"gallery": gallery});
+
+                            }).then(function(){
                                 var pswpImgSelector = "img.pswp__img";
                                 $(pswpImgSelector).on("load", function(){
                                     if ( this.src.startsWith("blob:") ) {
@@ -353,9 +358,6 @@ socket.on("connect", function(status){
                                         debugMode && console.log("revoked:", this.src); 
                                     }
                                 });
-
-                            //  currentIndex = gallery.itemHolders[1].index;
-                                debugMode && console.log({"gallery": gallery});
                             });
 
                         });
