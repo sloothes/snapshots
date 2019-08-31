@@ -300,47 +300,48 @@ socket.on("connect", function(status){
                             var pswp = $(".pswp").get(0);
                             var psui = PhotoSwipeUI_Default;
 
-                            var items = []; // build items array.
+                            var promises = []; // build items array.
 
                             docs.forEach(function(data, index){
 
                                 var url = data.link || data.url;
 
-                                items.push((function(){
-                                    return cache.match(url).then(function(response){
-                                        if (response) return response.blob();
-                                        else return cache.add(url).then(function(){
-                                            return cache.match(url).then(function(response){
-                                                return response.blob();
+                                promises.push(
+                                    (function(){
+                                        return cache.match(url).then(function(response){
+                                            if (response) return response.blob();
+                                            else return cache.add(url).then(function(){
+                                                return cache.match(url).then(function(response){
+                                                    return response.blob();
+                                                });
                                             });
+
+                                        }).then(function(blob){
+                                        //  debugMode && console.log(blob);
+
+                                            var options = {};
+                                            options.w = data.width;
+                                            options.h = data.height;
+                                            if (blob) options.src = URL.createObjectURL(blob);
+                                            else options.src = url;
+                                            return options;
+
+                                        }).catch(function(err){
+                                            console.error(err);
                                         });
-
-                                    }).then(function(blob){
-                                    //  debugMode && console.log(blob);
-
-                                        var options = {};
-                                        options.w = data.width;
-                                        options.h = data.height;
-                                        if (blob) options.src = URL.createObjectURL(blob);
-                                        else options.src = url;
-                                        return options;
-
-                                    }).catch(function(err){
-                                        console.error(err);
-                                    });
-                                })());
+                                    })()
+                                );
 
                             });
 
                             debugMode && console.log(items);
 
-
                             var options = {
-                                index: img.index, // start at selected index slide.
                             //  read for options: https://photoswipe.com/documentation/options.html
+                                index: img.index, // start at selected index slide.
                             };
 
-                            Promise.all(items).then(function(items){
+                            Promise.all(promises).then(function(items){
 
                                 var gallery = new PhotoSwipe( pswp, psui, items, options );
 
@@ -354,8 +355,7 @@ socket.on("connect", function(status){
                                     }
                                 });
 
-                                gallery.init();
-
+                                gallery.init(); // important!
 
                             //  currentIndex = gallery.itemHolders[1].index;
                                 debugMode && console.log({"gallery": gallery});
