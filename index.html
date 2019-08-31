@@ -316,7 +316,7 @@ socket.on("connect", function(status){
                                         });
 
                                     }).then(function(blob){
-                                        debugMode && console.log(blob);
+                                    //  debugMode && console.log(blob);
 
                                         var options = {};
                                         options.w = data.width;
@@ -350,7 +350,7 @@ socket.on("connect", function(status){
                                     debugMode && console.log( "imageLoadComplete:", item );
                                     var container = item.container;
                                     var src = $(container).find(".pswp__img").get(0).src;
-                                    if ( imgSrc.startsWith("blob:") ) {
+                                    if ( src.startsWith("blob:") ) {
                                         URL.revokeObjectURL(src);
                                         debugMode && console.log( "revoked:", src );
                                     }
